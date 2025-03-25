@@ -1,0 +1,44 @@
+%\subsection{Proof of equation \ref{Equation:newPhase}} % {$w_{\theta_{l}}$ derivation}
+%\noindent
+%The optimization problem corresponding to $w_{\theta_{l}}$  has the following form
+%\begin{equation*}
+ %   \label{Equation:problem4}
+ %   \begin{aligned}
+%        \min_{w_{\theta_l}} \quad & \sum_{i=1}^n  \frac{y^{i*} y^i}{\tau_i v} 
+ %   \quad \text{s.t.} \quad & |w_{\theta_{l}}| = 1
+ %   \end{aligned}
+%\end{equation*}
+%and the corresponding minimizer is obtained as follow
+%\begin{align*}
+%    &\frac{\partial \mathcal{L}}{\partial w_{\theta_{l}}} = 0 \Longleftrightarrow
+  %  \frac{\partial }{\partial w_{\theta_{l}}} \sum_{i=1}^n  \frac{y^{i*} y^i}{\tau_i v} = 0 \\
+ %   &\frac{1}{n} \sum_{i=1}^n \frac{ (x_{l}^i - w_{\theta_{l}} \boldsymbol{\delta})^* (- \boldsymbol{\delta})^T}{\tau_i} \times \frac{1}{n} \sum_{i=1}^n \frac{(x_{l}^i - w_{\theta_{l}} \boldsymbol{\delta})^*(x_{l}^i - w_{\theta_{l}} \boldsymbol{\delta})}{\tau_i} = 0 \\
+    %%&\sum_{i=1}^n \frac{ - x_{l}^{i*} \boldsymbol{\delta}^T + w_{\theta_{l}}^* \boldsymbol{\delta}^* \boldsymbol{\delta}^T}{\tau_i} \times \sum_{i=1}^n \frac{(x_{l}^i - w_{\theta_{l}} \boldsymbol{\delta})^*(x_{l}^i - w_{\theta_{l}} \boldsymbol{\delta})}{\tau_i} = 0 \\
+ %   & \sum_{i=1}^n \frac{1}{\tau_i} x_{l}^{i*} \boldsymbol{\delta}^T = \sum_{i=1}^n \frac{1}{\tau_i} w_{\theta_{l}}^* \boldsymbol{\delta}^* \boldsymbol{\delta}^T \\
+    %%&w_{\theta_{l}}^* = \left( \sum_{i=1}^n \frac{1}{\tau_i} x_{l}^{i*} \boldsymbol{\delta}^T \right) \left( \sum_{i=1}^n \frac{1}{\tau_i} \boldsymbol{\delta}^* \boldsymbol{\delta}^T \right)^{-1} \\
+  %  &w_{\theta_{l}} = \left( \sum_{i=1}^n \frac{1}{\tau_i^*} x_{l}^{i} \boldsymbol{\delta}^H \right) \times \left( \sum_{i=1}^n \frac{1}{\tau_i^*} \boldsymbol{\delta} \boldsymbol{\delta}^H \right)^{-1}
+%\end{align*}
+%where $\boldsymbol{\delta} = \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i$
+\vspace{-0.7cm}
+\subsection{Proof of equation (\ref{Equation:newPhase})} % {$w_{\theta_{l}}$ derivation}
+\noindent
+The optimization problem corresponding to $w_{\theta_{l}}$  has the following form
+\begin{equation*}
+    \begin{aligned}
+        \min_{w_{\theta_l}} \quad & \sum_{i=1}^n  \frac{y^{i*} y^i}{\tau_i v} 
+    \quad \text{s.t.} \quad & |w_{\theta_{l}}| = 1
+    \end{aligned}
+    \label{Equation:problem_w_app}
+\end{equation*}
+and the corresponding minimizer is obtained as follow
+\begin{align*}
+    &\frac{\partial \mathcal{L}}{\partial w_{\theta_{l}}} = 0 \Longleftrightarrow
+    \frac{\partial }{\partial w_{\theta_{l}}} \sum_{i=1}^n  \frac{y^{i*} y^i}{\tau_i v} = 0 \\
+    & \sum_{i=1}^n \frac{ (x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})^* (- \boldsymbol{\gamma} \mathbf{L}^{iH})^T}{\tau_i} \times  \sum_{i=1}^n \frac{(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})^*(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})}{\tau_i} = 0 \\
+    %%&\sum_{i=1}^n \frac{ - x_{l}^{i*} \boldsymbol{\delta}^T + w_{\theta_{l}}^* \boldsymbol{\delta}^* \boldsymbol{\delta}^T}{\tau_i} \times \sum_{i=1}^n \frac{(x_{l}^i - w_{\theta_{l}} \boldsymbol{\delta})^*(x_{l}^i - w_{\theta_{l}} \boldsymbol{\delta})}{\tau_i} = 0 \\
+    & \sum_{i=1}^n \frac{1}{\tau_i} x_{l}^{i*} \mathbf{L}^{i*} \boldsymbol{\gamma}^T = \sum_{i=1}^n \frac{1}{\tau_i} w_{\theta_{l}}^* \boldsymbol{\gamma} \mathbf{L}^{iT} \mathbf{L}^{i*} \boldsymbol{\gamma}^T \\
+    %%&w_{\theta_{l}}^* = \left( \sum_{i=1}^n \frac{1}{\tau_i} x_{l}^{i*} \boldsymbol{\delta}^T \right) \left( \sum_{i=1}^n \frac{1}{\tau_i} \boldsymbol{\delta}^* \boldsymbol{\delta}^T \right)^{-1} \\
+    %&w_{\theta_{l}} = \frac{\left( \sum_{i=1}^n \frac{1}{\tau_i^*} x_{l}^{i} \mathbf{L}^{i} \boldsymbol{\gamma}^T \right) \times \left( \sum_{i=1}^n \frac{1}{\tau_i^*} \boldsymbol{\gamma} \mathbf{M}^i \boldsymbol{\gamma}^T \right)^{-1}}{|| \left( \sum_{i=1}^n \frac{1}{\tau_i^*} x_{l}^{i} \mathbf{L}^{i} \boldsymbol{\gamma}^T \right) \times \left( \sum_{i=1}^n \frac{1}{\tau_i^*} \boldsymbol{\gamma} \mathbf{M}^i \boldsymbol{\gamma}^T \right)^{-1}||}
+    &w_{\theta_{l}} = \left( \sum_{i=1}^n \frac{1}{\tau_i^*} x_{l}^{i} \mathbf{L}^{i} \boldsymbol{\gamma}^T \right) \times \left( \sum_{i=1}^n \frac{1}{\tau_i^*} \boldsymbol{\gamma} \mathbf{M}^i \boldsymbol{\gamma}^T \right)^{-1}
+\end{align*}
+%where $\boldsymbol{\delta} = \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i$

@@ -1,0 +1,17 @@
+\vspace{-0.7cm}
+\subsection{Proof of equation (\ref{Equation:tau})} % {$\{\tau_i\}_{i=1}^n$ derivation}
+\noindent
+To update $\{\tau_i\}_{i=1}^n$, the optimization problem \ref{eq:optim_prob_seq} is reduced the following form
+\begin{equation*}
+    %\label{Equation:problem1}
+    \min_{\{\tau_i\}_{i=1}^n} \quad \sum_{i=1}^n \Bigg[ l \log(\tau_i) + \frac{y^{i*} y^i}{\tau_i v} + \frac{1}{\tau_i} \mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i \Bigg]  % \mathcal{L}_{SG}(\tau_i) 
+\end{equation*}
+The minimizer is obtained as 
+\vspace{-0.8cm}
+\begin{align*}
+    &\frac{\partial \mathcal{L}}{\partial \tau_i} = 0 \Longleftrightarrow 
+    \frac{\partial }{\partial \tau_i} \sum_{i=1}^n \Bigg[ l \log(\tau_i) + \frac{y^{i*} y^i}{\tau_i v} + \frac{1}{\tau_i} \mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i \Bigg] = 0 \\
+    %%%&\frac{l}{\tau_i} - \frac{y^{i*} y^i}{\tau_i^2 v} - \frac{1}{\tau_i^2} \mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i = 0 \\
+    %&l \tau_i v =  y^{i*} y^i + \mathbf{x^{iH}} \hat{\mathbf{\Sigma}}^{-1} \mathbf{x^i} v \\
+    &\tau_i = \frac{y^{i*} y^i}{l v} + \frac{\mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i}{l}
+\end{align*}

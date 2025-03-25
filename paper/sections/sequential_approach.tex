@@ -1,0 +1,169 @@
+\section{Proposed sequential approach}
+    \label{section:approach}
+    
+    \vspace{-0.2cm}
+    In our approach, namely \acs{SMLEPL} hereafter, the coherence parameters, $\gamma_l$ and $\boldsymbol{\gamma}$, are estimated simultaneously with the phase of the new image $w_{\theta_{l}}$ and the deterministic scale $\tau_i$, as %To sum up, four parameters will be estimated,
+    \vspace{-0.5em}
+    \begin{equation}
+        \begin{aligned}
+            \min_{\boldsymbol{\gamma}, \gamma_{l}, w_{\theta_{l}}, \{\tau_i\}_{i=1}^n} \quad & \mathcal{L}(\{\mathbf{\widetilde{x}}^i\}_{i=1}^n; \boldsymbol{\gamma}, \gamma_{l}, w_{\theta_{l}}, \{\tau_i\}_{i=1}^n) \\ 
+            \text{subject to} \quad & \boldsymbol{\gamma} \in \mathbb{R}^p, \gamma_{l} \in \mathbb{R}, |w_{\theta_{l}}| = 1, \; \theta_1 = 0
+        \end{aligned}
+        \label{eq:optim_prob_seq}
+    \end{equation}
+    The objective function of the aforementioned problem is the negative log-likelihood for the entire data set. Given the covariance matrix structure in (\ref{cov_mat_struc_block}) and assuming that $\mathbf{\widetilde{x}}^i \sim\mathcal{CN}(0, \tau_i \mathbf{\widetilde{\Sigma}})$, the negative log-likelihood derived from these assumptions for the entire data set, can be expressed as
+    \vspace{-0.2cm}
+    \begin{align}
+        &\mathcal{L}(\{\mathbf{\widetilde{x}}^i\}_{i=1}^n; \boldsymbol{\gamma}, \gamma_{l}, w_{\theta_{l}}, \{\tau_i\}_{i=1}^n)  
+        %\notag \\         &\qquad
+        = - \sum_{i=1}^n \mathcal{L}(\mathbf{\widetilde{x}}^i; \boldsymbol{\gamma}, \gamma_{l}, w_{\theta_{l}}, \tau_i) \notag \\
+        &= - \sum_{i=1}^n \Bigg[ \mathcal{L}(x_{l}^i | \mathbf{x}^i; \boldsymbol{\gamma}, \gamma_{l}, w_{\theta_{l}}, \tau_i) + \mathcal{L}(\mathbf{x}^i; \tau_i) \Bigg] \label{log_likelihood_eq} 
+    \end{align}
+    \noindent
+    In the above equation, the transition from the distribution over the entire dataset to the conditional distribution is achieved through \citep{anderson1962introduction}, where $x_{l}^i|\mathbf{x}^i \sim \mathcal{CN}(\mu_x^i, \sigma^2_x)$ in which 
+    %\vspace{-0.2cm}
+    \begin{itemize}
+        \item $\mu_x^i = w_{\theta_{l}} \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H\hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i$
+        \item $\sigma^2_x = \tau_i (\gamma_l - \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1}  \text{diag}(\hat{\mathbf{w}}_{\theta}) \boldsymbol{\gamma}^T)$
+    \end{itemize}
+    %\vspace{-0.2cm}
+    \noindent
+    %\textcolor{blue}{
+    where $\hat{\mathbf{w}}_{\theta}$ and $\hat{\mathbf{\Sigma}}$ were previously estimated using the offline \acs{MLEPL} method \citep{vu2023robust} based on previous images $\{\mathbf{x}^i\}_{i=1}^n$.%}
+    %\textcolor{blue}{The parameters denoted with hats indicate that they have already been estimated by the offline \acs{MLEPL} \citep{vu2023robust}.}
+    By denoting $\small k = \small \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \text{diag}(\hat{\mathbf{w}}_{\theta}) \boldsymbol{\gamma}^T $, $v = \gamma_l -  k$,
+    
+    \noindent 
+    $\small \mathbf{L}^i = \small \mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \text{diag}(\hat{\mathbf{w}}_{\theta})$, $y^i = x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH}$
+    
+    %\noindent
+    %$\small k = \small \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \text{diag}(\hat{\mathbf{w}}_{\theta}) \boldsymbol{\gamma}^T $ and $v = \gamma_l -  k$
+    %$v = \gamma_l -  \boldsymbol{\gamma}  \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \text{diag}(\hat{\mathbf{w}}_{\theta}) \boldsymbol{\gamma}^T$, the negative log-likelihood in (\ref{log_likelihood_eq}), can be formulated as 
+    \vspace{-0.2cm}
+    \begin{align}
+        \mathcal{L}(\{\mathbf{\widetilde{x}}^i\}_{i=1}^n; \boldsymbol{\gamma}, \gamma_{l}, &w_{\theta_{l}}, \{\tau_i\}_{i=1}^n) = \sum_{i=1}^n \Bigg[ l \log(\tau_i) + \log\left( v \right) \notag \\
+        &+ \frac{y^{i*} y^i}{\tau_i v} + \frac{1}{\tau_i} \mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i \Bigg] \label{log_likelihood_eq_final}
+    \end{align}
+    The problem (\ref{eq:optim_prob_seq}) can be solved using a \acs{BCD} algorithm \citep{hong2015unified}. It  updates iteratively each parameter by solving the corresponding sub-problem while holding the other parameters fixed (cf. Algorithm \ref{Algorithm:algoBCD}). %\textcolor{blue}{
+    The convergence of the BCD algorithm is guaranteed in this case since each sub-problem is convex \citep{razaviyayn2013unified, hong2015unified}.%}
+    \vspace{-0.1cm}
+    \begin{algorithm}
+        \caption{ \normalsize \ac{BCD} algorithm }
+        \label{Algorithm:algoBCD}
+        \begin{algorithmic}
+            \State \normalsize \fontsize{10}{12}\selectfont \textbf{input} : Samples $\{\mathbf{\widetilde{x}}^i\}_{i=1}^n$, $\hat{\mathbf{\Sigma}}$, $\text{diag}(\hat{\mathbf{w}}_{\theta})$
+            \State \normalsize \fontsize{10}{12}\selectfont \textbf{initialization} :$\{\tau_i\}_{i=1}^n = 1$, $w_{\theta_{l}} = 1$, $\boldsymbol{\gamma}$ and $\gamma_{l}$ using the Toeplitz matrix structure
+            \Repeat
+                \State \normalsize \fontsize{10}{12}\selectfont Bloc 1 : Update of $\{\tau_i\}_{i=1}^n$ with (\ref{Equation:tau})
+                \State \normalsize \fontsize{10}{12}\selectfont Bloc 2 : Update of $\boldsymbol{\gamma}$ with (\ref{Equation:gammaVector})
+                \State \normalsize \fontsize{10}{12}\selectfont  Bloc 3 : Update of $\gamma_{l}$ with (\ref{Equation:gammaScalar})
+                \State \normalsize \fontsize{10}{12}\selectfont Bloc 4 : Update of $w_{\theta_{l}}$ with (\ref{Equation:newPhase})
+            \Until{\normalsize \fontsize{10}{12}\selectfont convergence}
+            \State \normalsize \fontsize{10}{12}\selectfont  \textbf{output}: $\boldsymbol{\gamma}$, $\gamma_{l}$ and $w_{\theta_{l}}$
+        \end{algorithmic}
+    \end{algorithm}
+    
+    \vspace{-0.3cm}
+    \noindent
+    In the following, we present the results of the updates. The detailed calculation procedures throughout the article are provided in the supplementary materials. 
+    \vspace{-0.5cm}
+    \subsection*{\textbf{Bloc 1 : Update $\{\tau_i\}_{i=1}^n$}}
+    \label{subsection:update_tau}
+        \noindent
+        By fixing $\boldsymbol{\gamma}$, $\gamma_{l}$ and $w_{\theta_{l}}$, the problem of updating $\{\tau_i\}_{i=1}^n$ can be formulated as follows % is updated iteratively by solving the following sub-problem
+        \vspace{-0.1cm}
+        \begin{equation}
+            \label{Equation:problem1}
+            \min_{\{\tau_i\}_{i=1}^n} \quad \sum_{i=1}^n \Bigg[ l \log(\tau_i) + \frac{y^{i*} y^i}{\tau_i v} + \frac{1}{\tau_i} \mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i \Bigg]  % \mathcal{L}_{SG}(\tau_i) 
+        \end{equation}
+        The corresponding analytical solution is
+        \vspace{-0.2cm}
+        \begin{equation}
+            \label{Equation:tau}
+            \tau_i = \frac{y^{i*} y^i}{l v} + \frac{\mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i}{l},
+        \end{equation}
+        \vspace{-1cm}
+    \subsection*{\textbf{Bloc 2 : Update $\boldsymbol{\gamma}$}}
+        \label{subsection:update_gamma}
+        \noindent
+        $\boldsymbol{\gamma}$ is updated by fixing $\gamma_{l}$, $w_{\theta_{l}}$ and $\{\tau_i\}_{i=1}^n$, with the following sub-problem 
+        \vspace{-0.2cm}
+        \begin{equation}
+            \label{Equation:problem2}
+            \min_{\boldsymbol{\gamma}} \quad \sum_{i=1}^n \Bigg[ \log\left( v \right) + \frac{y^{i*} y^i}{\tau_i v} \Bigg]  % \mathcal{L}_{SG}(\boldsymbol{\gamma}) 
+            \quad  \text{s.t.} \quad  \boldsymbol{\gamma}  \in \mathbb{R}^p
+        \end{equation}
+        and by designating %$\small \mathbf{L}^i = \small \mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \text{diag}(\hat{\mathbf{w}}_{\theta})$ and 
+        $\small \mathbf{M}^i = \small \mathbf{L}^{iH} \mathbf{L}^i$, the analytical resolution takes the following form
+        \vspace{-0.1cm}
+        \begin{equation}
+            \label{Equation:gammaVector}
+            \resizebox{\columnwidth}{!}{$
+            \small \boldsymbol{\gamma} = \small \left(\sum_{i=1}^n \frac{1}{\tau_i} (w_{\theta_{l}}^* x_{l}^i \mathbf{L}^i - w_{\theta_{l}} x_{l}^{i*} \mathbf{L}^{i*})  \right) . \left(\sum_{i=1}^n \frac{1}{\tau_i} (\mathbf{M}^{i*} + \mathbf{M}^{i}) \right)^{-1}
+            $,}
+        \end{equation}
+        %where $\small \mathbf{L}^i = \small \mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \text{diag}(\hat{\mathbf{w}}_{\theta})$ and $\small \mathbf{M}^i = \small \mathbf{L}^{iH} \mathbf{L}^i$
+        \vspace{-1cm}
+    \subsection*{\textbf{Bloc 3 : Update $\gamma_{l}$}}
+        \label{subsection:update_gamma_l}
+        \noindent
+        The problem of updating $\gamma_{l}$ with fixed $\{\tau_i\}_{i=1}^n$, $\boldsymbol{\gamma}$ and $w_{\theta_{l}}$ reads
+        \vspace{-0.5em}
+        \begin{equation}
+            \label{Equation:problem3}
+            \min_{\gamma_{l}} \quad \sum_{i=1}^n \Bigg[ \log\left( v \right) + \frac{y^{i*} y^i}{\tau_i v}  \Bigg] %  \mathcal{L}_G(\gamma_{l}) 
+            \quad \text{s.t.} \quad  \gamma_{l}  \in \mathbb{R}
+        \end{equation} 
+        %By indicating $\small k = \small \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \text{diag}(\hat{\mathbf{w}}_{\theta}) \boldsymbol{\gamma}^T $, the minimizer is obtained as
+        The minimizer is obtained as
+        \vspace{-0.1cm}
+        \begin{equation}
+            \label{Equation:gammaScalar}
+            \gamma_{l} = \frac{1}{n} \sum_{i=1}^n \frac{1}{\tau_i} (x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})^*(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})
+            + k ,
+        \end{equation}
+        %where $\small k = \small \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \text{diag}(\hat{\mathbf{w}}_{\theta}) \boldsymbol{\gamma}^T $
+        \vspace{-0.8cm}
+    \subsection*{\textbf{Bloc 4 : Update $w_{\theta_{l}}$}}
+        \label{subsection:update_w_theta}
+        \noindent
+        Updating $w_{\theta_{l}}$ with fixed $\{\tau_i\}_{i=1}^n$, $\boldsymbol{\gamma}$ and $\gamma_{l}$ requires to solve the sub-problem 
+        \vspace{-0.5em}
+        \begin{equation}
+            \label{Equation:problem_w}
+            \begin{aligned}
+                \min_{w_{\theta_l}} \quad & \sum_{i=1}^n  \frac{y^{i*} y^i}{\tau_i v}  % \mathcal{L}_G(w_{\theta_{l}}) 
+            \quad \text{s.t.} \quad & |w_{\theta_{l}}| = 1 % w_{\theta_{l}} \in \mathbb{T}_{l} %\text{,}  \theta_1 = 0
+            \end{aligned}
+        \end{equation}
+        The phase difference of the new image has the following form
+        \vspace{-0.7em}
+        \begin{equation}
+            \label{Equation:newPhase}
+            %\textcolor{blue}{
+            \small w_{\theta_l} = \small \Big( \big(\sum_{i=1}^n \frac{1}{\tau_i^*} x_{l}^{i} \mathbf{L}^i \boldsymbol{\gamma}^T \big) . \big(\sum_{i=1}^n \frac{1}{\tau_i^*} \boldsymbol{\gamma} \mathbf{M}^i \boldsymbol{\gamma}^T \big)^{-1}\Big). %}.
+            % \frac{\Big( \big(\sum_{i=1}^n \frac{1}{\tau_i^*} x_{l}^{i} \mathbf{L}^i \boldsymbol{\gamma}^T \big) . \big(\sum_{i=1}^n \frac{1}{\tau_i^*} \boldsymbol{\gamma} \mathbf{M}^i \boldsymbol{\gamma}^T \big)^{-1}\Big)}{|| \Big( \big(\sum_{i=1}^n \frac{1}{\tau_i^*} x_{l}^{i} \mathbf{L}^i \boldsymbol{\gamma}^T \big) . \big(\sum_{i=1}^n \frac{1}{\tau_i^*} \boldsymbol{\gamma} \mathbf{M}^i \boldsymbol{\gamma}^T \big)^{-1}\Big) ||}
+        \end{equation}
+        %\textcolor{blue}{
+        A projection step is required to respect the constraint in the sub-problem (\ref{Equation:problem_w}).%}
+        %\begin{remark}
+        %    \ac{PL} approach is expensive, mainly due to the number of images involved, the latter increases the size of the coherence matrix and extends computations time due to extensive mathematical matrix operations. Offline approaches handle $(l, l)$ matrices, while our approach focuses on estimating scalars and one vector. The computational complexity of \acs{MLEPL} relies on matrix inversion and \ac{SVD}, computed repeatedly in the \acs{BCD} algorithm iterations ($n_{\text{iter}}$), resulting in $O(n_{\text{iter}} \, p^3)$ complexity. However, \acs{SMLEPL} involves inverting a single matrix once throughout the entire process, achieving $O(p^3)$ complexity.
+        %\end{remark}       
+        
+        \noindent
+        %\textcolor{blue}{
+        \textbf{Computational cost:} \ac{PL} approach is expensive, mainly due to the number of images involved, the latter increases the size of the coherence matrix and extends computations time due to extensive mathematical matrix operations. Offline approaches handle inversion and estimating $l\times l$ matrices, while our approach focuses on estimating scalars and one vector. The complexity of the \acs{SMLEPL} approach is $O(p^3)$, while the complexity of the \acs{MLEPL} approach is $O(n_{\text{iter}} l^3)$.%}
+        %The computational complexity of \acs{MLEPL} relies on matrix inversion and \ac{SVD}, computed repeatedly in the \acs{BCD} algorithm iterations ($n_{\text{iter}}$).  However, \acs{SMLEPL} involves inverting a single matrix once throughout the entire process
+        %\begin{table}[H]
+        %        \centering
+        %        \begin{tabular}{|c|c|}
+        %        \hline
+        %            \textcolor{blue}{\acs{SMLEPL}} & \textcolor{blue}{\acs{MLEPL}}   \\ \hline
+        %             \textcolor{blue}{$O(p^3)$}      & \textcolor{blue}{$O(3 \times n_{\text{iter}} \, l^3)$} \\ \hline
+        %        \end{tabular}
+        %        \caption{\textcolor{blue}{Complexity comparison of \acs{SMLEPL} and \acs{MLEPL}}}
+        %        \label{tab:complexity}
+        %    \end{table} 
+        %The more images there are, the larger the coherence matrix becomes, resulting in longer computation time due to the extensive mathematical operations performed on these matrices. 
+            %The \ac{PL} approach is costly due to the number of images involved, which increases the size of the coherence matrix and extends computation time due to intensive matrix operations. Offline methods handle $(l, l)$ matrices, while our approach focuses on estimating scalars and a vector. In \acs{sgMLEPL}, computational complexity heavily relies on matrix inversion and \ac{SVD}, computed repeatedly in \acs{BCD} iterations ($n_{\text{iter}}$), resulting in $O(n_{\text{iter}} , p^3)$ complexity. In contrast, \acs{SsgMLEPL} involves inverting a single matrix just once throughout the entire process, achieving $O(p^3)$ complexity.
+            %%\acs{PL} approach is expensive, mainly due to the number of images involved, increasing the coherence matrix size and extending the computation time. While offline approaches handle $(l, l)$ matrices, our approach estimates scalars and one vector. \acs{MLEPL} has $O(n_{\text{iter}} p^3)$ complexity from repeated matrix inversion and \ac{SVD} in the \acs{BCD} algorithm iterations ($n_{\text{iter}}$), whereas \acs{SMLEPL} requires only a single matrix inversion, achieving $O(p^3)$ complexity.

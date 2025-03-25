@@ -1,0 +1,30 @@
+\section*{Log-likelihood function computation} 
+\noindent The optimization problem has the following form 
+\begin{equation*}
+    \begin{aligned}
+        \min_{\boldsymbol{\gamma}, \gamma_{l}, \theta_{l}, \{\tau_i\}_{i=1}^n} \quad & \mathcal{L}(\boldsymbol{\gamma}, \gamma_{l}, w_{\theta_{l}}, \{\tau_i\}_{i=1}^n) \\
+        \text{subject to} \quad & \boldsymbol{\gamma}, \gamma_{l} \; \text{real}, \; |w_{\theta_{l}}| = 1, \; \theta_1 = 0
+    \end{aligned}
+    %\label{eq:optim_prob_seq}
+\end{equation*}
+The negative log-likelihood function (eq. \ref{log_likelihood_eq_final}) is obtained as follow
+    \begin{align*}
+        &\mathcal{L}(\{\mathbf{\widetilde{x}}^i\}_{i=1}^n; \boldsymbol{\gamma}, \gamma_{l}, w_{\theta_{l}}, \tau_i) = - \sum_{i=1}^n \mathcal{L}(\mathbf{\widetilde{x}}^i; \boldsymbol{\gamma}, \gamma_{l}, w_{\theta_{l}}, \{\tau_i\}_{i=1}^n) \\
+        & = - \sum_{i=1}^n \Bigg[ \mathcal{L}(x_{l}^i | \mathbf{x}^i; \boldsymbol{\gamma}, \gamma_{l}, w_{\theta_{l}}, \tau_i) + \mathcal{L}(\mathbf{x}^i; \tau_i) \Bigg] \\
+        %%&= - \sum_{i=1}^n \log\left(\frac{1}{(\pi)^n |\sigma^2_x|} \exp{(- \frac{1}{\sigma^2_x} (x_{l}^i - \mu_x^i)^*(x_{l}^i - \mu_x^i) )} \right. \\
+        %%& \left. \qquad \times \frac{1}{(\pi)^n |\tau_i \hat{\mathbf{\Sigma}}|} \exp{(- \frac{1}{\tau_i} \mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i})\right) \\
+        %& = - \sum_{i=1}^n \left( - n \log(\pi)  - \log(|\sigma^2_x|) - \frac{1}{\sigma^2_x} (x_{l}^i - \mu_x^i)^*(x_{l}^i - \mu_x^i) \right. \\
+        %& \left. \qquad - n \log(\pi) - \log(\tau_i^{l}|\mathbf{\Sigma}|) - \frac{1}{\tau_i} \mathbf{x^{iH}} \hat{\mathbf{\Sigma}}^{-1} \mathbf{x^i} \right) \\
+        & \propto  \sum_{i=1}^n \Bigg[ \log(\tau_i) + \log( \gamma_l - \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \text{diag}(\hat{\mathbf{w}}_{\theta}) \boldsymbol{\gamma}^T) \\
+        & + \frac{(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} 
+         \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i)^*(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i)}{\tau_i (\gamma_l - \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \text{diag}(\hat{\mathbf{w}}_{\theta}) \boldsymbol{\gamma}^T)} \\
+        & + p \log(\tau_i) + \frac{1}{\tau_i} \mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i \Bigg] \\
+        %& \propto \sum_{i=1}^n \Bigg[ l \log(\tau_i) + \log( \gamma_l -  \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \text{diag}(\hat{\mathbf{w}}_{\theta}) \boldsymbol{\gamma}^T) \\
+        %& + \frac{(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \mathbf{x^i})^*(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \mathbf{x^i})}{\tau_i (\gamma_l - \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \text{diag}(\hat{\mathbf{w}}_{\theta}) \boldsymbol{\gamma}^T)} \\
+        %& + \frac{1}{\tau_i} \mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \mathbf{x^i} \Bigg] \\
+        & = \sum_{i=1}^n \Bigg[ l \log(\tau_i) + \log\left( v \right) + \frac{y^{i*} y^i}{\tau_i v} + \frac{1}{\tau_i} \mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i \Bigg]
+    \end{align*}
+    where $v = \gamma_l -  \boldsymbol{\gamma}  \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \text{diag}(\hat{\mathbf{w}}_{\theta}) \boldsymbol{\gamma}^T$, 
+    
+    \noindent
+    $\small \mathbf{L}^i = \small \mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \text{diag}(\hat{\mathbf{w}}_{\theta})$ and $y^i = x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH}$.

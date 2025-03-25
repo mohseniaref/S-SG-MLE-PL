@@ -1,0 +1,29 @@
+\vspace{-1cm}
+\subsection{Proof of equation (\ref{Equation:gammaScalar})} %{$\gamma_l$ derivation}
+\noindent
+There is only $v$ that depends on $\gamma_l$, and therefore the corresponding problem will have the following form 
+% $\gamma_l$ is updating with the following problem
+\begin{equation*}
+    %\label{Equation:problem3}
+     \min_{\gamma_{l}} \quad \sum_{i=1}^n \Bigg[ \log\left( v \right) + \frac{y^{i*} y^i}{\tau_i v}  \Bigg] %  \mathcal{L}_G(\gamma_{l}) 
+    \quad \text{s.t.} \quad  \gamma_{l}   \in \mathbb{R}
+\end{equation*} 
+\vspace{-0.3cm}
+and obtained as
+\vspace{-0.5cm}
+\begin{align*}
+    &\frac{\partial \mathcal{L}}{\partial \gamma_l} = 0 \Longleftrightarrow
+    %&\frac{\partial }{\partial \gamma_l} \sum_{i=1}^n \Bigg[ l \log(\tau_i) + \log(v) + \frac{y^{i*} y^i}{\tau_i v} + \frac{1}{\tau_i} \mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \mathbf{x^i} \Bigg] = 0 \\
+    \frac{\partial }{\partial \gamma_l} \sum_{i=1}^n \Bigg[\log( v) + \frac{y^{i*} y^i}{\tau_i v} \Bigg] = 0 \\
+    %%&n \frac{1}{(\gamma_l - \alpha)} -  \sum_{i=1}^n \frac{y^{i*} y^i}{\tau_i (\gamma_l - \alpha)^2} = 0\\
+    %&n (\gamma_l - \alpha) = \sum_{i=1}^n \frac{y^{i*} y^i}{\tau_i} \\
+    %%&\gamma_l = \frac{1}{n} \sum_{i=1}^n \frac{y^{i*} y^i}{\tau_i} + \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H \mathbf{\Sigma}^{-1} \text{diag}(\hat{\mathbf{w}}_{\theta})
+    %%\boldsymbol{\gamma}^T\\
+    &\gamma_{l} = \frac{1}{n} \sum_{i=1}^n \frac{1}{\tau_i} (x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})^*(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH}) + k
+\end{align*}    
+%%where $\alpha = \boldsymbol{\gamma} \text{diag}(\hat{\mathbf{w}}_{\theta})^H \mathbf{\Sigma}^{-1} \text{diag}(\hat{\mathbf{w}}_{\theta}) \boldsymbol{\gamma}^T$ and so $v = \gamma_l - \alpha$. 
+%$\gamma_l$ is then replaced in the log-likelihood function (\ref{log_likelihood_eq_final}) which will be updated as follow
+%\begin{align*}
+  %  \mathcal{L}_{SG}(\mathbf{\widetilde{x}}; \boldsymbol{\gamma}, \gamma_{l}, w_{\theta_{l}}, \tau_i) &= \sum_{i=1}^n \Bigg[ l \log(\tau_i) + \log( \frac{1}{n} \sum_{i=1}^n \frac{y^{i*} y^i}{\tau_i} )  \\
+  %  &+ n + \frac{1}{\tau_i} \mathbf{x}^{iH} \hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i \Bigg]
+%\end{align*}

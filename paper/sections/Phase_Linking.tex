@@ -1,0 +1,38 @@
+\section{offline approaches}
+    \label{section:PL}
+    \acs{PL} approach consists in estimating the \acs{SAR} wrapped phases while exploiting the covariance matrix of the \acs{SAR} image time series, making it an inferential statistical procedure. Starting from $l$ \acs{SAR} images, \acs{PL} algorithms aim to estimate $l-1$ phases differences from all possible combinations ($\frac{l(l-1)}{2}$), which is equivalent to combining all interferometric phases into a single reference. This algorithm underwent updates and enhancements over the years \citep{guarnieri2008exploitation, 9763551, vu2023robust, gao2024distributed, ferretti2011new, ansari2018efficient}. A recent review of \acs{PL} algorithms was proposed in \citep{10261889, cao2015mathematical}. % and compared in \citep{cao2015mathematical}.
+    The classic \ac{PL} \citep{guarnieri2008exploitation} algorithms start by calculating the \ac{SCM}, $\mathbf{\widetilde{S}} = \frac{1}{n} \sum_{i=1}^n \mathbf{\widetilde{x}}^i \mathbf{\widetilde{x}}^{iH}$, and then considering $\mathbf{\widetilde{\Psi}} = |\mathbf{\widetilde{S}}|$ %where $| \, . \, |$ denotes the element-wise modulus of a matrix,
+    as a plug-in of the coherence matrix in order to solve the following problem 
+    \vspace{-1em}
+    \begin{gather}
+    \label{eq:classic_phaselinking}
+        \begin{array}{cl}
+        \underset{\mathbf{\widetilde{w}}_{\mathbf{\theta}}}{\rm minimize}
+        & 
+        \mathcal{L}(\mathbf{\widetilde{\Psi}} \circ \mathbf{\widetilde{w}}_{\mathbf{\theta}}\mathbf{\widetilde{w}}_{\mathbf{\theta}}^H) \\
+        \text{ subject to}
+        & \mathbf{\widetilde{w}}_{\theta} \in \mathbb{T}_{l} \text{,} \; \widetilde{w}_{\theta_1} = 1 %\textcolor{blue}{\widetilde{w}_{\theta_1} = 1}
+        \end{array}
+    \end{gather}
+    \noindent
+    where $\mathcal{L}$ corresponds to the negative log-likelihood function of the data following the zero mean \ac{CCG} distribution. %$\mathbf{\widetilde{w}}_{\mathbf{\theta}}=[e^{j \theta_0}, \dots,e^{j \theta_{l}}]$ denotes the exponentiation of the complex phase vector and 
+    
+    \noindent
+    $\mathbb{T}_l = \left\{\mathbf{\widetilde{w}}_{\mathbf{\theta}} \in \mathbb{C}^{l} | \, |[\mathbf{\widetilde{w}}_{\mathbf{\theta}}]_i| = 1, \forall i \in [1, l]\right\}$ is the $l$-torus of phase only complex vectors. %The upper case boldface indicates a matrix, lower case boldface a vector and italic represents a scalar. 
+    %$\circ$ represents the element-wise (Hadamard) multiplication, 
+    The classic \acs{PL} relies on the coherence matrix plug-in which can biases the results especially in case of low coherence regions, heterogeneous samples or small sample size. To address these  issues, \citep{vu2022new, 9763551, vu2023robust} proposed to use the \acs{MLE} of the coherence matrix along with the phases which allows solving the following problem by the \ac{BCD} \citep{hong2015unified}. % algorithm which will be further elaborated in section \ref{section:approach}. 
+    The latter reads as
+        \begin{equation}
+        \label{eq:MLE_phaselinking}
+            \begin{array}{cl}
+            \underset{\mathbf{\widetilde{\Psi}}, \mathbf{\widetilde{w}}_{\mathbf{\theta}}}{\rm minimize}
+            & 
+            \mathcal{L}(\mathbf{\widetilde{\Psi}} \circ \mathbf{\widetilde{w}}_{\mathbf{\theta}}\mathbf{\widetilde{w}}_{\mathbf{\theta}}^H)
+            \\
+            \text{ subject to}
+            & 
+            \mathbf{\widetilde{\Psi}} \in \mathbb{R}^{l \times l}, \mathbf{\widetilde{w}}_{\theta} \in \mathbb{T}_{l} \text{,} \; \widetilde{w}_{\theta_1} = 1  %\textcolor{blue}{\widetilde{w}_{\theta_1} = 1}
+            \end{array}
+        \end{equation} 
+        \noindent
+        The coherence matrix $\mathbf{\widetilde{\Psi}}$ can be given in a closed-form, and $ \mathbf{\widetilde{w}}_{\mathbf{\theta}}$ can be found through a \acs{MM} algorithm \citep{hunter2004tutorial, sun2016majorization}. This algorithm exhibits favorable convergence properties \citep{razaviyayn2013unified}, which can be attributed to the same arguments as in \citep{soltanalian2014designing, breloy2021majorization}, given its constraint within the compact set $\mathbb{T}_{l}$. This approach can be extended to a mixture of Scaled Gaussian models \citep{ollila2012complex} where $\mathbf{\widetilde{x}}^i \sim\mathcal{CN}(0, \tau_i \mathbf{\widetilde{\Sigma}})$. This offline algorithm will be denoted in the following \acs{MLEPL} \citep{vu2023robust}.

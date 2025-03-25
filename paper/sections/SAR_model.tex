@@ -1,0 +1,41 @@
+\section{SAR image time series model}
+    \label{section:data_model}
+    \noindent
+    For a given stack of $l = p+1$ \acs{SAR} images, we consider a local homogeneous spatial neighborhood of size $n$ denoted $\{\mathbf{\widetilde{x}}^i\}_{i=1}^n$ where $\mathbf{\widetilde{x}}^i \in \mathbb{C}^{l}$ for all $i \in [\! [1,n] \!]$, i.e., 
+    \begin{equation}
+        \label{eq:data}
+            \mathbf{\widetilde{x}}^i = [\underbrace{x_1^i, \dots, x_p^i}_{\mathbf{x}^i}, x_{l}^i ]^T \in \mathbb{C}^{l},
+    \end{equation}
+    \noindent
+    $\mathbf{x}^i \in \mathbb{C}^{p}$ indicates the multivariate pixel of the previous images (Fig. \ref{fig:datacube}). %\footnote{\footnotesize \textcolor{red}{The tilde represents all the data, and when absent, it refers to the past data, whereas the hat symbol indicates that the parameter used is an estimate.}} (Fig. \ref{fig:datacube}). 
+    \vspace{-0.5cm}
+    \begin{figure}[hbt]
+        \centering
+        \input{tikz/seq_new_image_v1}
+        %\vspace{-10pt}
+        \caption{\small The representation of \acs{SAR} data incorporates both previous and recently acquired images. The local neighborhood of size $n$ is denoted by gray pixels (sliding window).}
+        \label{fig:datacube}
+    \end{figure}
+    \vspace{-0.2cm}
+    A common assumption consists in considering that $\{\mathbf{\widetilde{x}}^i\}_{i=1}^n$ is a set of vectors \ac{i.i.d} following a zero mean \acf{CCG} distribution \citep{bamler1998synthetic}, i.e., $\mathbf{\widetilde{x}}\sim\mathcal{CN}(0, \mathbf{\widetilde{\Sigma}})$. Most of \acs{PL} algorithms in the literature are based on this assumption \citep{ferretti2001permanent, ansari2018efficient, vu2022new, 9763551}, however \citep{mian2018new, vu2023robust} showed that this assumption does not always hold true
+    %a Generalized Gaussian distribution provides a better fit for the Sentinel-1 image data 
+    and addressed Scaled Gaussian model. For this scenario, the data follows a Gaussian distribution conditionally to a deterministic unknown scale $\tau_i$ \citep{ollila2012complex, maronna2019robust}, i.e,  $\mathbf{\widetilde{x}}^i \sim\mathcal{CN}(0, \tau_i \mathbf{\widetilde{\Sigma}})$.
+    The real core of the covariance matrix is denoted by $\mathbf{\widetilde{\Psi}}$, and $\mathbf{\widetilde{w}}_{\mathbf{\theta}}$ represents the vector of the exponential of the complex phases ($\mathbf{\widetilde{w}}_{\mathbf{\theta}}=[e^{j \theta_0}, \dots,e^{j \theta_{l}}]$). Based on standard physical parameters in \acs{InSAR}, the covariance matrix respects the given structure \citep{guarnieri2008exploitation}
+    \vspace{-0.4em}
+    \begin{equation}
+        \label{Equation:cov_mat_struc}
+       \mathbf{\widetilde{\Sigma}} = \mathbf{\widetilde{\Psi}} \circ \mathbf{\widetilde{w}}_{\theta}\mathbf{\widetilde{w}}_{\theta}^H.
+    \end{equation}
+    %where the symbol $\circ$ characterizes the element-wise (Hadamard) multiplication, the exponent $^H$ corresponds to the transposed and complex conjugated operator (Hermitian). % $\mathbf{\widetilde{\Psi}}$ denotes the real core of the covariance matrix and $\mathbf{\widetilde{w}}_{\mathbf{\theta}}$ represents the vector of the exponential of the complex phases ($\mathbf{\widetilde{w}}_{\mathbf{\theta}}=[e^{j \theta_0}, \dots,e^{j \theta_{l}}]$).
+    According to (\ref{Equation:cov_mat_struc}) and given the representation of the data in (\ref{eq:data}), the covariance matrix can be equivalently represented as 
+    \begin{equation}
+        \label{cov_mat_struc_block}
+        \mathbf{\widetilde{\Sigma}} = \left( 
+            \begin{array}{cc}
+               \boldsymbol{\Sigma} &   w_{\theta_{l}}^* \mathrm{diag}(\mathbf{w}_{\theta})\boldsymbol{\gamma}^T  \\
+                \boldsymbol{\gamma} \mathrm{diag}(\mathbf{w}_{\theta})^H w_{\theta_{l}}    & \gamma_{l} \\ 
+            \end{array} \right),
+    \end{equation}
+    where $\mathbf{\Sigma}$ corresponds to the previously estimated covariance matrix between the previous \acs{SAR} images, $\boldsymbol{\gamma}$ denotes the coherence vector between the newly acquired data and the previous ones, $\gamma_{l}$ symbolizes the variance of the newly acquired data,  and $w_{\theta_{l}}$ is the exponential of the phase of the latest date %(with respect to the reference date) 
+    and $ \mathbf{w}_{\theta}$ corresponds to the vector of the exponential of the complex phases differences of the past. %The tilde represents all the data, and when absent, it refers to the past data, whereas the hat symbol indicates that the parameter used is an estimate.
+    %\textcolor{blue}{The exponent $^T$ (resp. $^*$) is  the transposed operator (resp. the conjugated operator).}

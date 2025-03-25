@@ -1,0 +1,37 @@
+\vspace{-0.9cm}
+\subsection{Proof of equation (\ref{Equation:gammaVector}) } % {$\boldsymbol{\gamma}$ derivation}
+\noindent
+The corresponding optimization problem to estimate $\boldsymbol{\gamma}$ has the following form 
+\vspace{-0.1cm}
+\begin{equation*}
+    %\label{Equation:problem2}
+    \min_{\boldsymbol{\gamma}} \quad \sum_{i=1}^n \Bigg[ \log\left( v \right) + \frac{y^{i*} y^i}{\tau_i v} \Bigg]  % \mathcal{L}_{SG}(\boldsymbol{\gamma}) 
+    \quad  \text{s.t.} \quad  \boldsymbol{\gamma}  \in \mathbb{R}^p
+\end{equation*}
+\vspace{-0.3cm}
+The closed form of $\boldsymbol{\gamma}$ is obtained as follow
+\begin{align*}
+    &\frac{\partial \mathcal{L}}{\partial \boldsymbol{\gamma}} = 0 \Longleftrightarrow
+    \frac{\partial }{\partial\boldsymbol{\gamma}} \sum_{i=1}^n \Bigg[ \log\left( v \right) + \frac{y^{i*} y^i}{\tau_i v} \Bigg] = 0 \\
+    %%%&n \frac{1}{\frac{1}{n} \sum_{i=1}^n \frac{(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})^*(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})}{\tau_i}} \\
+    %%%&\qquad \times \frac{1}{n} \sum_{i=1}^n \frac{1}{\tau_i} \Bigg[ \frac{\partial}{\partial \boldsymbol{\gamma}}(x_{l}^{i*} - w_{\theta_{l}}^* \boldsymbol{\gamma} \mathbf{L}^{iT}) (x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH}) \\
+    %%&\qquad \qquad + (x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})^* \frac{\partial}{\partial \boldsymbol{\gamma}}(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH}) \Bigg] = 0\\
+    & \frac{\sum_{i=1}^n \frac{1}{\tau_i} \frac{\partial}{\partial \boldsymbol{\gamma}}(x_{l}^{i*} - w_{\theta_{l}}^* \boldsymbol{\gamma} \mathbf{L}^{iT}) (x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})}{\frac{1}{n} \sum_{i=1}^n \frac{(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})^*(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})}{\tau_i}} \times \sum_{i=1}^n \frac{1}{\tau_i} (x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})^* \frac{\partial}{\partial \boldsymbol{\gamma}}(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH}) = 0\\
+    %& n \frac{1}{\frac{1}{n} \sum_{i=1}^n \frac{(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})^*(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})}{\tau_i}} \\
+    %%%%& \frac{1}{n} \sum_{i=1}^n \frac{1}{\tau_i} \Bigg[( - w_{\theta_{l}}^*  \mathbf{L}^{iT})^{T} (x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH}) + (x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})^* ( - w_{\theta_{l}} \mathbf{L}^{iH})^{T} \Bigg] = 0\\
+    %& n \frac{1}{\frac{1}{n} \sum_{i=1}^n \frac{(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})^*(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})}{\tau_i}} \\
+    %%& \sum_{i=1}^n \frac{1}{\tau_i} \Bigg[( - w_{\theta_{l}}^*  \mathbf{L}^{i})  (x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})  \\
+    %%& \qquad + (x_{l}^{i*} - w_{\theta_{l}}^* \boldsymbol{\gamma} \mathbf{L}^{iT}) ( - w_{\theta_{l}} \mathbf{L}^{i*}  ) \Bigg] = 0\\
+    %& n \frac{1}{\frac{1}{n} \sum_{i=1}^n \frac{(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})^*(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})}{\tau_i}} \\
+    %%& \sum_{i=1}^n \frac{1}{\tau_i} \Bigg[ -w_{\theta_{l}}^* \mathbf{L}^{i} x_{l}^i + \mathbf{L}^{i} \boldsymbol{\gamma} \mathbf{L}^{iH} \\
+    %%&\qquad - x_{l}^{i*} w_{\theta_{l}} \mathbf{L}^{i*} + \boldsymbol{\gamma} \mathbf{L}^{iT} \mathbf{L}^{i*} \Bigg] = 0\\
+    %& n \frac{1}{\frac{1}{n} \sum_{i=1}^n \frac{(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})^*(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})}{\tau_i}} \\
+    %%& \sum_{i=1}^n \frac{1}{\tau_i} \Bigg[  - w_{\theta_{l}}^* \mathbf{L}^{i} x_{l}^i  - x_{l}^{i*} w_{\theta_{l}} \mathbf{L}^{i*}   \\
+    %%& \qquad + \boldsymbol{\gamma} \mathbf{L}^{iT} \mathbf{L}^{i*} + \boldsymbol{\gamma} \mathbf{L}^{iH} \mathbf{L}^{i}  \Bigg] = 0\\
+    %& n \frac{1}{\frac{1}{n} \sum_{i=1}^n \frac{(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})^*(x_{l}^i - w_{\theta_{l}} \boldsymbol{\gamma} \mathbf{L}^{iH})}{\tau_i}} \\
+    & \sum_{i=1}^n \frac{1}{\tau_i} \Bigg[  - w_{\theta_{l}}^* \mathbf{L}^{i} x_{l}^i  - x_{l}^{i*} w_{\theta_{l}} \mathbf{L}^{i*} + \boldsymbol{\gamma} \left(\mathbf{L}^{iT} \mathbf{L}^{i*} + \mathbf{L}^{iH} \mathbf{L}^{i} \right)  \Bigg] = 0\\
+    %&\frac{1}{n} \sum_{i=1}^n \frac{1}{\tau_i} \Bigg[  - w_{\theta_{l}}^* \mathbf{L}^{i} x_{l}^i  - x_{l}^{i*} w_{\theta_{l}} \mathbf{L}^{i*} + \boldsymbol{\gamma} \left(\mathbf{L}^{iT} \mathbf{L}^{i*} + \mathbf{L}^{iH} \mathbf{L}^{i} \right)  \Bigg] = 0\\
+    %&\boldsymbol{\gamma} \sum_{i=1}^n \frac{1}{\tau_i} \left(\mathbf{L}^{iT} \mathbf{L}^{i*} + \mathbf{L}^{iH} \mathbf{L}^{i} \right) = \sum_{i=1}^n \frac{1}{\tau_i} \left( w_{\theta_{l}}^* \mathbf{L}^{i} x_{l}^i  + x_{l}^{i*} w_{\theta_{l}} \mathbf{L}^{i*} \right) \\
+    &\boldsymbol{\gamma} = \sum_{i=1}^n \frac{1}{\tau_i} \left( w_{\theta_{l}}^* \mathbf{L}^{i} x_{l}^i  + x_{l}^{i*} w_{\theta_{l}} \mathbf{L}^{i*} \right) \times \left( \sum_{i=1}^n \frac{1}{\tau_i} \left(\mathbf{M}^{i*} + \mathbf{M}^i \right) \right)^{-1}
+\end{align*}
+%where $\mathbf{L}^{iH} = \text{diag}(\hat{\mathbf{w}}_{\theta})^H \hat{\mathbf{\Sigma}}^{-1} \mathbf{x}^i$ and $\small \mathbf{M}^i = \small \mathbf{L}^{iH} \mathbf{L}^i$
