@@ -2,15 +2,18 @@ name: s-sg-mle-pl
 channels:
   - conda-forge
 dependencies:
-  - python=3.7
-  - matplotlib
-  - plotly
-  - seaborn
-  - pandas
-  - tqdm
+  - python=3.10.14
   - numpy
+  - osgeo
   - scipy
-  - scikit-learn
+  - warnings
+  - sys
+  - os
+  - multiprocessing
+  - matplotlib
+  - functools
+  - tqdm
+  - argsparse
   - pip
   - ipython
   - pip:
